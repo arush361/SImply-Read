@@ -687,7 +687,7 @@ function addExtInfo() {
 
     var extAnchor = document.createElement("a");
     extAnchor.href = "https://github.com/ZachSaucier/Just-Read";
-    extAnchor.innerText = "Just Read";
+    extAnchor.innerText = "Simply Read";
     extAnchor.target = "_blank";
     viewedUsing.appendChild(extAnchor);
 

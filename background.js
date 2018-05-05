@@ -1,4 +1,4 @@
-function startJustRead(tab) {
+function startSimplyRead(tab) {
     var tabId = tab ? tab.id : null; // Defaults to the current tab
     chrome.tabs.executeScript(tabId, {
         file: "content_script.js", // Script to inject into page and run in sandbox
@@ -18,30 +18,30 @@ function startSelectText() {
     chrome.tabs.executeScript(null, {
         code: 'var useText = true;' // Ghetto way of signaling to select text instead of
     }, function() {                 // using Chrome messages
-        startJustRead();
+        startSimplyRead();
     });
 }
 
 function createPageCM() {
     // Create a right click menu option
     pageCMId = chrome.contextMenus.create({
-         title: "View this page using Just Read",
+         title: "View this page using Simply Read",
          id: "pageCM",
          contexts: ["page"],
-         onclick: startJustRead
+         onclick: startSimplyRead
     });
 }
 function createHighlightCM() {
     // Create an entry to allow user to use currently selected text
     highlightCMId = chrome.contextMenus.create({
-        title: "View this text in Just Read",
+        title: "View this text in Simply Read",
         id: "highlightCM",
         contexts:["selection"],
         onclick: function(info, tab) {
             chrome.tabs.executeScript(null, {
                 code: 'var textToRead = true'
             }, function() {
-                startJustRead();
+                startSimplyRead();
             });
         }
     });
@@ -49,7 +49,7 @@ function createHighlightCM() {
 function createLinkCM() {
     // Create an entry to allow user to open a given link using Just read
     linkCMId = chrome.contextMenus.create({
-        title: "View the linked page using Just Read",
+        title: "View the linked page using Simply Read",
         id: "linkCM",
         contexts:["link"],
         onclick: function(info, tab) {
@@ -59,7 +59,7 @@ function createLinkCM() {
                     chrome.tabs.executeScript(newTab.id, {
                         code: 'var runOnLoad = true'
                     }, function() {
-                        startJustRead(newTab);
+                        startSimplyRead(newTab);
                     });
                 }
             );
@@ -119,7 +119,7 @@ function updateCMs() {
 }
 
 // Listen for the extension's click
-chrome.browserAction.onClicked.addListener(startJustRead);
+chrome.browserAction.onClicked.addListener(startSimplyRead);
 
 // Add our context menus
 updateCMs();
@@ -133,7 +133,7 @@ chrome.storage.sync.get("show-del-btn", function(result) {
 // Listen for the keyboard shortcut
 chrome.commands.onCommand.addListener(function(command) {
     if(command == "open-just-read")
-        startJustRead();
+        startSimplyRead();
     if(command == "select-text")
         startSelectText();
 });
@@ -179,7 +179,7 @@ chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
                             chrome.tabs.executeScript(tabId, {
                                 code: 'var runOnLoad = true;' // Ghetto way of signaling to run on load
                             }, function() {                   // instead of using Chrome messages
-                                startJustRead(tab);
+                                startSimplyRead(tab);
                             });
                         }
                     }
